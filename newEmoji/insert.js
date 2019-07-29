@@ -1,6 +1,5 @@
 var emojiDefaultSize = 100;
 var recentEmojiDefaultNumber = 27;
-var cookieExpireDays = 30;
 const emo_url = chrome.runtime.getURL('data/emo_url.json');
 var urlArr = [];
 
@@ -12,9 +11,11 @@ async function importEmoUrl() {
 }
 
 $(document).ready(function () {
-    waitForEl("#post-create", function () {
-        mainApp();
-    });
+    if ($('noscript').text().search('Mattermost')) {
+        waitForEl("#post-create", function () {
+            mainApp();
+        });
+    };
 });
 
 async function mainApp() {
@@ -35,13 +36,13 @@ async function mainApp() {
                 $('#newEmojiPanel').css('right', '417px');
                 $('#newEmojiPanel-preview').css('right', '743px');
             } else {
-                $('#newEmojiPanel').css('right', '15px');
+                $('#newEmojiPanel').css('right', '12px');
                 $('#newEmojiPanel-preview').css('right', '341px');
             }
 
             $('.emoji-picker').hide();
-            $('#newEmojiPanel').css('top', '441px');
-            $('#newEmojiPanel-preview').css('top', '442px');
+            $('#newEmojiPanel').css('bottom', '82px');
+            $('#newEmojiPanel-preview').css('bottom', '389px');
             $('#newEmojiPanel-preview').css('background-size', '103px');
             $('#newEmojiPanel-preview').css('max-width', 'unset');
             $('#newEmojiPanel-preview').css('max-height', 'unset');
@@ -213,14 +214,14 @@ async function createNewEmojiPanel() {
     var recentEmojiDiv = `<div id="recent_emoji"></div>`;
     $('#emojipickeritems-new').html(html + recentEmojiDiv);
 
-
-    let data = localStorage.getItem("newEmoji");
+    let data = JSON.parse(localStorage.getItem("newEmoji"));
+    let rawData = await importEmoUrl();
     if (data === null) {
-        let data = await importEmoUrl();
+        data = rawData;
         localStorage.setItem("newEmoji", JSON.stringify(data));
     }
 
-    urlArr = JSON.parse(data);
+    urlArr = data;
     let contentDiv = "";
     Object.keys(urlArr).forEach(function (key) {
         let urls = urlArr[key];
