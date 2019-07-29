@@ -24,7 +24,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://chat.vietis.com.vn/*"],
+      "matches": ["<all_urls>"],
       "run_at": "document_end",
       "js": ["jquery.js", "insert.js"],
       "css": ["newEmoji.css"]
